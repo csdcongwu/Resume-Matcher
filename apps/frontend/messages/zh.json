@@ -1048,6 +1048,20 @@
   },
   "tracker": {
     "manage": "管理",
+    "interviewQuestions": {
+      "button": "面试题",
+      "title": "面试题记录",
+      "description": "记录并统一查看各条申请的公司面试题。",
+      "application": "申请记录",
+      "question": "面试题",
+      "questionPlaceholder": "输入面试题……",
+      "applicationHint": "题目会关联到所选申请及对应公司。",
+      "noApplications": "请先添加申请，再记录面试题。",
+      "add": "添加题目",
+      "empty": "暂无面试题记录。",
+      "loadFailed": "无法加载面试题。",
+      "saveFailed": "无法保存面试题。"
+    },
     "manageDialog": {
       "title": "管理看板列",
       "description": "选择在看板上显示的阶段。",

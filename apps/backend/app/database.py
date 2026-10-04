@@ -28,7 +28,15 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.config import settings
 from app.db_engine import init_models_sync, make_async_engine, make_sync_engine
-from app.models import ApiKey, Application, Improvement, Job, Resume, TailoringPreview
+from app.models import (
+    ApiKey,
+    Application,
+    Improvement,
+    InterviewQuestion,
+    Job,
+    Resume,
+    TailoringPreview,
+)
 from app.preview import (
     PreviewBusyError,
     PreviewClaim,
@@ -248,6 +256,18 @@ class Database:
             "position": row.position,
             "created_at": row.created_at,
             "updated_at": row.updated_at,
+        }
+
+    @staticmethod
+    def _interview_question_to_dict(
+        row: InterviewQuestion, application: Application
+    ) -> dict[str, Any]:
+        return {
+            "question_id": row.question_id,
+            "application_id": row.application_id,
+            "question": row.question,
+            "company": application.company,
+            "role": application.role,
         }
 
     # -- Resume operations --------------------------------------------------
@@ -1215,6 +1235,43 @@ class Database:
                 await self._renumber(session, status)
             await session.commit()
         return deleted
+
+    async def create_interview_question(
+        self, application_id: str, question: str
+    ) -> dict[str, Any] | None:
+        """Create a question and return it with the card's current company/role."""
+        async with self._write_session() as session:
+            application = await session.get(Application, application_id)
+            if application is None:
+                return None
+            row = InterviewQuestion(
+                question_id=str(uuid4()),
+                application_id=application_id,
+                question=question,
+                created_at=_now(),
+            )
+            session.add(row)
+            await session.commit()
+            return self._interview_question_to_dict(row, application)
+
+    async def list_interview_questions(self) -> list[dict[str, Any]]:
+        """List every recorded question, newest first, with application context."""
+        async with self._session() as session:
+            result = await session.execute(
+                select(InterviewQuestion, Application)
+                .join(
+                    Application,
+                    Application.application_id == InterviewQuestion.application_id,
+                )
+                .order_by(
+                    InterviewQuestion.created_at.desc(),
+                    InterviewQuestion.question_id.desc(),
+                )
+            )
+            return [
+                self._interview_question_to_dict(row, application)
+                for row, application in result.all()
+            ]
 
     # -- Encrypted API key store (sync; read on the LLM hot path) -----------
 

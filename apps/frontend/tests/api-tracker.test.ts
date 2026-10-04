@@ -6,6 +6,7 @@ import {
   deleteApplication,
   updateApplication,
 } from '@/lib/api/tracker';
+import { createInterviewQuestion, listInterviewQuestions } from '@/lib/api/tracker';
 import { llmProviderToKeyProvider } from '@/lib/api/config';
 
 /**
@@ -112,5 +113,26 @@ describe('tracker API client', () => {
   it('surfaces the backend detail message on failure', async () => {
     fetchMock.mockResolvedValue(new Response(JSON.stringify({ detail: 'boom' }), { status: 500 }));
     await expect(deleteApplication('x')).rejects.toThrow('boom');
+  });
+
+  it('createInterviewQuestion POSTs the question to its application', async () => {
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ question_id: 'q1', application_id: 'app-1' }), { status: 200 })
+    );
+    await createInterviewQuestion('app-1', 'Explain a difficult tradeoff.');
+    const { url, options } = lastCall();
+    expect(url).toContain('/applications/app-1/interview-questions');
+    expect(options.method).toBe('POST');
+    expect(JSON.parse(String(options.body))).toEqual({
+      question: 'Explain a difficult tradeoff.',
+    });
+  });
+
+  it('listInterviewQuestions GETs the global question collection', async () => {
+    fetchMock.mockResolvedValue(new Response(JSON.stringify([]), { status: 200 }));
+    await listInterviewQuestions();
+    const { url, options } = lastCall();
+    expect(url).toContain('/applications/interview-questions');
+    expect(options.method ?? 'GET').toBe('GET');
   });
 });

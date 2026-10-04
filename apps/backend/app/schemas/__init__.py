@@ -74,6 +74,8 @@ from app.schemas.applications import (
     BulkDelete,
     BulkStatusUpdate,
     ManualApplicationCreate,
+    InterviewQuestionCreate,
+    InterviewQuestionResponse,
 )
 
 __all__ = [
@@ -148,4 +150,6 @@ __all__ = [
     "BulkStatusUpdate",
     "BulkDelete",
     "ApplicationActionResponse",
+    "InterviewQuestionCreate",
+    "InterviewQuestionResponse",
 ]

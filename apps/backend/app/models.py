@@ -9,7 +9,7 @@ never sees ORM objects — preserving the TinyDB-era contracts.
 from datetime import datetime, timezone
 from typing import Any
 
-from sqlalchemy import JSON, Boolean, Index, Integer, String, Text, UniqueConstraint, text
+from sqlalchemy import JSON, Boolean, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -150,6 +150,19 @@ class Application(Base):
     created_at: Mapped[str] = mapped_column(String, default=_utcnow_iso)
     updated_at: Mapped[str] = mapped_column(String, default=_utcnow_iso)
 
+
+class InterviewQuestion(Base):
+    """A manually recorded interview question for one tracker card."""
+
+    __tablename__ = "interview_questions"
+
+    question_id: Mapped[str] = mapped_column(String, primary_key=True)
+    application_id: Mapped[str] = mapped_column(
+        ForeignKey("applications.application_id", ondelete="CASCADE"),
+        index=True,
+    )
+    question: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[str] = mapped_column(String, default=_utcnow_iso)
 
 class ApiKey(Base):
     """An encrypted LLM provider API key.

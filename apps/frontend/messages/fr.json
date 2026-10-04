@@ -1048,6 +1048,20 @@
   },
   "tracker": {
     "manage": "Gérer",
+    "interviewQuestions": {
+      "button": "Questions d'entretien",
+      "title": "Registre des questions",
+      "description": "Consignez et consultez les questions de chaque candidature.",
+      "application": "Candidature",
+      "question": "Question",
+      "questionPlaceholder": "Saisissez une question d'entretien…",
+      "applicationHint": "La question sera liée à la candidature et à l'entreprise sélectionnées.",
+      "noApplications": "Ajoutez une candidature avant d'enregistrer des questions.",
+      "add": "Ajouter la question",
+      "empty": "Aucune question d'entretien enregistrée.",
+      "loadFailed": "Impossible de charger les questions.",
+      "saveFailed": "Impossible d'enregistrer la question."
+    },
     "manageDialog": {
       "title": "Gérer les colonnes",
       "description": "Choisissez les étapes affichées sur le tableau.",

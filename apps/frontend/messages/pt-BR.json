@@ -1048,6 +1048,20 @@
   },
   "tracker": {
     "manage": "Gerenciar",
+    "interviewQuestions": {
+      "button": "Perguntas de entrevista",
+      "title": "Registro de perguntas",
+      "description": "Registre e consulte perguntas de cada candidatura.",
+      "application": "Candidatura",
+      "question": "Pergunta",
+      "questionPlaceholder": "Digite uma pergunta de entrevista…",
+      "applicationHint": "A pergunta será vinculada à candidatura e empresa selecionadas.",
+      "noApplications": "Adicione uma candidatura antes de registrar perguntas.",
+      "add": "Adicionar pergunta",
+      "empty": "Ainda não há perguntas registradas.",
+      "loadFailed": "Não foi possível carregar as perguntas.",
+      "saveFailed": "Não foi possível salvar a pergunta."
+    },
     "manageDialog": {
       "title": "Gerenciar colunas",
       "description": "Escolha quais etapas aparecem no quadro.",

@@ -61,6 +61,14 @@ export interface ApplicationUpdate {
   interview_at?: string | null;
 }
 
+export interface InterviewQuestion {
+  question_id: string;
+  application_id: string;
+  question: string;
+  company: string | null;
+  role: string | null;
+}
+
 export interface ApplicationActionResponse {
   message: string;
   affected: number;
@@ -117,6 +125,22 @@ export async function createApplication(payload: ManualApplicationCreate): Promi
 export async function getApplicationDetail(id: string): Promise<ApplicationDetail> {
   const res = await apiFetch(`/applications/${id}`, { credentials: 'include' });
   return asJson<ApplicationDetail>(res, 'Failed to load application');
+}
+
+// List every manually recorded interview question across application cards.
+export async function listInterviewQuestions(): Promise<InterviewQuestion[]> {
+  const res = await apiFetch('/applications/interview-questions', { credentials: 'include' });
+  return asJson<InterviewQuestion[]>(res, 'Failed to load interview questions');
+}
+
+export async function createInterviewQuestion(
+  applicationId: string,
+  question: string
+): Promise<InterviewQuestion> {
+  const res = await apiPost(`/applications/${applicationId}/interview-questions`, {
+    question,
+  });
+  return asJson<InterviewQuestion>(res, 'Failed to create interview question');
 }
 
 // Update one card (status/position/notes/company/role/applied_at/interview_at).
