@@ -17,6 +17,8 @@ from app.schemas import (
     BulkDelete,
     BulkStatusUpdate,
     ManualApplicationCreate,
+    InterviewQuestionCreate,
+    InterviewQuestionResponse,
 )
 
 logger = logging.getLogger(__name__)
@@ -52,6 +54,22 @@ async def list_applications() -> ApplicationListResponse:
         logger.error("Failed to list applications: %s", e)
         raise HTTPException(status_code=500, detail="Failed to load applications. Please try again.")
     return ApplicationListResponse(columns=_group_by_status(applications))
+
+
+@router.get("/interview-questions", response_model=list[InterviewQuestionResponse])
+async def list_interview_questions() -> list[InterviewQuestionResponse]:
+    """List all recorded interview questions across application cards."""
+    try:
+        questions = await db.list_interview_questions()
+    except DatabaseBusyError:
+        raise
+    except Exception as e:
+        logger.error("Failed to list interview questions: %s", e)
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to load interview questions. Please try again.",
+        )
+    return [InterviewQuestionResponse(**question) for question in questions]
 
 
 @router.post("", response_model=ApplicationResponse)
@@ -113,6 +131,29 @@ async def get_application_detail(application_id: str) -> ApplicationDetailRespon
         logger.warning("Failed to load detail context for %s: %s", application_id, e)
 
     return ApplicationDetailResponse(**application, job_content=job_content, resume=resume)
+
+
+@router.post(
+    "/{application_id}/interview-questions",
+    response_model=InterviewQuestionResponse,
+)
+async def create_interview_question(
+    application_id: str, request: InterviewQuestionCreate
+) -> InterviewQuestionResponse:
+    """Record one manually entered interview question for an application."""
+    try:
+        question = await db.create_interview_question(application_id, request.question)
+    except DatabaseBusyError:
+        raise
+    except Exception as e:
+        logger.error("Failed to create interview question for %s: %s", application_id, e)
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to create interview question. Please try again.",
+        )
+    if question is None:
+        raise HTTPException(status_code=404, detail="Application not found")
+    return InterviewQuestionResponse(**question)
 
 
 @router.patch("/bulk", response_model=ApplicationActionResponse)

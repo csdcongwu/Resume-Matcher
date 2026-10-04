@@ -1048,6 +1048,20 @@
   },
   "tracker": {
     "manage": "管理",
+    "interviewQuestions": {
+      "button": "面接質問",
+      "title": "面接質問の記録",
+      "description": "応募先ごとの面接質問を記録して一覧表示します。",
+      "application": "応募",
+      "question": "質問",
+      "questionPlaceholder": "面接の質問を入力…",
+      "applicationHint": "質問は選択した応募先と企業に関連付けられます。",
+      "noApplications": "質問を記録する前に応募を追加してください。",
+      "add": "質問を追加",
+      "empty": "記録された面接質問はありません。",
+      "loadFailed": "面接質問を読み込めませんでした。",
+      "saveFailed": "面接質問を保存できませんでした。"
+    },
     "manageDialog": {
       "title": "列の管理",
       "description": "ボードに表示するステージを選択します。",

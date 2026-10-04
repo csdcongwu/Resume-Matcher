@@ -6,6 +6,7 @@ import { KanbanBoard } from '@/components/tracker/kanban-board';
 import {
   APPLICATION_STATUS_ORDER,
   listApplications,
+  listInterviewQuestions,
   type Application,
   type ApplicationColumns,
   type ApplicationStatus,
@@ -24,7 +25,11 @@ vi.mock('@/lib/i18n', () => ({
 
 vi.mock('@/lib/api/tracker', async () => {
   const actual = await vi.importActual<typeof import('@/lib/api/tracker')>('@/lib/api/tracker');
-  return { ...actual, listApplications: vi.fn() };
+  return {
+    ...actual,
+    listApplications: vi.fn(),
+    listInterviewQuestions: vi.fn(),
+  };
 });
 
 // Wraps (does not replace) the real dialog so the board's `onToggle` can be
@@ -188,6 +193,7 @@ describe('KanbanBoard column visibility', () => {
     localStorage.clear();
     boardDialog.onToggle = null;
     vi.mocked(listApplications).mockResolvedValue({ columns: columnsFixture() });
+    vi.mocked(listInterviewQuestions).mockResolvedValue([]);
   });
 
   it('does not write the stored selection back on mount', async () => {
@@ -231,5 +237,17 @@ describe('KanbanBoard column visibility', () => {
 
     expect(visibleColumns()).toEqual(['saved']);
     expect(localStorage.getItem(TRACKER_HIDDEN_STATUSES_KEY)).toBe(stored);
+  });
+
+  it('opens interview questions without changing visible columns', async () => {
+    await renderBoard();
+    const before = visibleColumns();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'tracker.interviewQuestions.button' })
+    );
+
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    expect(visibleColumns()).toEqual(before);
   });
 });

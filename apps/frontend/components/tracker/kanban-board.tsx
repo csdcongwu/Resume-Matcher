@@ -13,6 +13,7 @@ import {
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import Plus from 'lucide-react/dist/esm/icons/plus';
 import Settings from 'lucide-react/dist/esm/icons/settings';
+import ClipboardList from 'lucide-react/dist/esm/icons/clipboard-list';
 import Loader2 from 'lucide-react/dist/esm/icons/loader-2';
 import ChevronLeft from 'lucide-react/dist/esm/icons/chevron-left';
 import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
@@ -34,6 +35,7 @@ import { CardDetailModal } from './card-detail-modal';
 import { ManualAddApplicationDialog } from './manual-add-application-dialog';
 import { planMove } from './reorder';
 import { ManageColumnsDialog } from './manage-columns-dialog';
+import { InterviewQuestionsDialog } from './interview-questions-dialog';
 import {
   readHiddenStatuses,
   toggleHiddenStatus,
@@ -61,6 +63,7 @@ export function KanbanBoard() {
   const [openCardId, setOpenCardId] = useState<string | null>(null);
   const [manualAddOpen, setManualAddOpen] = useState(false);
   const [manageOpen, setManageOpen] = useState(false);
+  const [interviewQuestionsOpen, setInterviewQuestionsOpen] = useState(false);
   const [hiddenStatuses, setHiddenStatuses] = useState<Set<ApplicationStatus>>(() =>
     readHiddenStatuses()
   );
@@ -221,10 +224,14 @@ export function KanbanBoard() {
             {t('tracker.subtitle')}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <Button variant="outline" onClick={() => setManageOpen(true)}>
             <Settings className="h-4 w-4" />
             {t('tracker.manage')}
+          </Button>
+          <Button variant="outline" onClick={() => setInterviewQuestionsOpen(true)}>
+            <ClipboardList className="h-4 w-4" />
+            {t('tracker.interviewQuestions.button')}
           </Button>
           {showScrollControls && (
             <div className="flex items-center">
@@ -360,6 +367,11 @@ export function KanbanBoard() {
         onOpenChange={setManageOpen}
         hiddenStatuses={hiddenStatuses}
         onToggle={handleToggleStatus}
+      />
+
+      <InterviewQuestionsDialog
+        open={interviewQuestionsOpen}
+        onOpenChange={setInterviewQuestionsOpen}
       />
     </div>
   );

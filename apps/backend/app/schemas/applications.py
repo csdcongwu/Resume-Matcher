@@ -110,3 +110,27 @@ class ApplicationActionResponse(BaseModel):
 
     message: str
     affected: int
+
+
+class InterviewQuestionCreate(BaseModel):
+    """A manually entered question tied to one tracker card."""
+
+    question: str = Field(min_length=1)
+
+    @field_validator("question")
+    @classmethod
+    def reject_blank_question(cls, value: str) -> str:
+        stripped = value.strip()
+        if not stripped:
+            raise ValueError("Question cannot be blank")
+        return stripped
+
+
+class InterviewQuestionResponse(BaseModel):
+    """A saved question plus its current application company and role."""
+
+    question_id: str
+    application_id: str
+    question: str
+    company: str | None = None
+    role: str | None = None
