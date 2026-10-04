@@ -37,6 +37,11 @@ export function ApplicationCard({
 
   const company = application.company?.trim();
   const role = application.role?.trim();
+  const interviewAt = application.interview_at ? new Date(application.interview_at) : null;
+  const interviewAtLabel =
+    interviewAt && !Number.isNaN(interviewAt.getTime())
+      ? interviewAt.toLocaleString()
+      : application.interview_at;
 
   return (
     <div ref={setNodeRef} style={style}>
@@ -66,6 +71,11 @@ export function ApplicationCard({
             <p className="truncate font-mono text-xs text-ink-soft">
               {role || t('tracker.card.roleUnknown')}
             </p>
+            {application.status === 'interview' && interviewAtLabel && (
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-wide text-primary">
+                {t('tracker.card.interviewTime', { time: interviewAtLabel })}
+              </p>
+            )}
             {application.applied_at && (
               <p className="mt-1 font-mono text-[10px] uppercase tracking-wide text-steel-grey">
                 {new Date(application.applied_at).toLocaleDateString()}

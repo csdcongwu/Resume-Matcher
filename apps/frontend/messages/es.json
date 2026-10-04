@@ -1081,6 +1081,7 @@
     "card": {
       "companyUnknown": "Empresa desconocida",
       "roleUnknown": "Puesto sin título",
+      "interviewTime": "Entrevista: {time}",
       "sharedResume": "Currículum compartido",
       "selectAria": "Seleccionar candidatura",
       "dragAria": "Arrastra para reordenar"
@@ -1088,6 +1089,7 @@
     "modal": {
       "jobDescription": "Descripción del empleo",
       "noJobDescription": "No hay descripción del empleo.",
+      "interviewTime": "Fecha y hora de la entrevista",
       "notes": "Notas",
       "notesPlaceholder": "Añade notas sobre esta candidatura…",
       "saveNotes": "Guardar notas",

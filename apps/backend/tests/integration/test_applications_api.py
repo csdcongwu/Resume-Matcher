@@ -142,6 +142,33 @@ class TestUpdateAndMove:
         assert body["notes"] == "Recruiter call Friday"
         assert body["company"] == "NewCo"
 
+    async def test_patch_interview_time_round_trips_and_clears(self, isolated_db):
+        card = await _seed_card(isolated_db, status="interview")
+        interview_at = "2026-10-08T06:30:00+00:00"
+        async with _client() as client:
+            resp = await client.patch(
+                f"/api/v1/applications/{card['application_id']}",
+                json={"interview_at": interview_at},
+            )
+            assert resp.status_code == 200
+            assert resp.json()["interview_at"] == interview_at
+
+            board = (await client.get("/api/v1/applications")).json()["columns"]
+            assert board["interview"][0]["interview_at"] == interview_at
+
+            detail = (await client.get(f"/api/v1/applications/{card['application_id']}")).json()
+            assert detail["interview_at"] == interview_at
+
+            cleared = await client.patch(
+                f"/api/v1/applications/{card['application_id']}",
+                json={"interview_at": None},
+            )
+            assert cleared.status_code == 200
+            assert cleared.json()["interview_at"] is None
+
+            reloaded = (await client.get(f"/api/v1/applications/{card['application_id']}")).json()
+            assert reloaded["interview_at"] is None
+
     async def test_patch_unknown_returns_404(self, isolated_db):
         async with _client() as client:
             resp = await client.patch("/api/v1/applications/nope", json={"notes": "x"})
