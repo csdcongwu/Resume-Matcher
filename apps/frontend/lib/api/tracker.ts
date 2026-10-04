@@ -23,6 +23,7 @@ export interface Application {
   company: string | null;
   role: string | null;
   applied_at: string | null;
+  interview_at: string | null;
   notes: string | null;
   position: number;
   created_at: string;
@@ -57,6 +58,7 @@ export interface ApplicationUpdate {
   company?: string;
   role?: string;
   applied_at?: string;
+  interview_at?: string | null;
 }
 
 export interface InterviewQuestion {
@@ -141,7 +143,7 @@ export async function createInterviewQuestion(
   return asJson<InterviewQuestion>(res, 'Failed to create interview question');
 }
 
-// Update one card (status/position/notes/company/role/applied_at).
+// Update one card (status/position/notes/company/role/applied_at/interview_at).
 export async function updateApplication(
   id: string,
   payload: ApplicationUpdate

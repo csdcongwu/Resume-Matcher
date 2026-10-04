@@ -308,6 +308,46 @@ class TestApplications:
         assert len(remaining) == 1
         assert remaining[0]["position"] == 0  # renumbered after delete
 
+    def test_interview_at_migration_is_idempotent(self, tmp_path: Path) -> None:
+        engine = make_sync_engine(tmp_path / "legacy-applications.db")
+        try:
+            with engine.begin() as conn:
+                conn.exec_driver_sql(
+                    """
+                    CREATE TABLE applications (
+                        application_id TEXT PRIMARY KEY,
+                        job_id TEXT NOT NULL,
+                        resume_id TEXT NOT NULL,
+                        master_resume_id TEXT,
+                        status TEXT DEFAULT 'applied',
+                        company TEXT,
+                        role TEXT,
+                        applied_at TEXT,
+                        notes TEXT,
+                        position INTEGER DEFAULT 0,
+                        created_at TEXT,
+                        updated_at TEXT
+                    )
+                    """
+                )
+                conn.exec_driver_sql(
+                    "INSERT INTO applications (application_id, job_id, resume_id, status) "
+                    "VALUES ('legacy-card', 'legacy-job', 'legacy-resume', 'interview')"
+                )
+
+            init_models_sync(engine)
+            init_models_sync(engine)
+
+            with engine.begin() as conn:
+                columns = [c["name"] for c in conn.exec_driver_sql("PRAGMA table_info(applications)").mappings()]
+                row = conn.exec_driver_sql(
+                    "SELECT interview_at FROM applications WHERE application_id = 'legacy-card'"
+                ).one()
+            assert columns.count("interview_at") == 1
+            assert row[0] is None
+        finally:
+            engine.dispose()
+
 
 class TestApiKeyStore:
     async def test_set_get_delete_ciphertext(self, db):

@@ -1095,6 +1095,7 @@
     "card": {
       "companyUnknown": "회사명 미상",
       "roleUnknown": "직무명 없음",
+      "interviewTime": "면접: {time}",
       "sharedResume": "공유된 이력서",
       "selectAria": "지원 선택",
       "dragAria": "드래그하여 순서 변경"
@@ -1102,6 +1103,7 @@
     "modal": {
       "jobDescription": "채용 공고",
       "noJobDescription": "등록된 채용 공고가 없습니다.",
+      "interviewTime": "면접 일시",
       "notes": "메모",
       "notesPlaceholder": "이 지원에 대한 메모를 추가하세요…",
       "saveNotes": "메모 저장",

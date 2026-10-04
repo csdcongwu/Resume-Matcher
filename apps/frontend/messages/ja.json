@@ -1095,6 +1095,7 @@
     "card": {
       "companyUnknown": "会社名不明",
       "roleUnknown": "役職名なし",
+      "interviewTime": "面接：{time}",
       "sharedResume": "共有された履歴書",
       "selectAria": "応募を選択",
       "dragAria": "ドラッグして並べ替え"
@@ -1102,6 +1103,7 @@
     "modal": {
       "jobDescription": "求人内容",
       "noJobDescription": "求人内容はありません。",
+      "interviewTime": "面接日時",
       "notes": "メモ",
       "notesPlaceholder": "この応募についてのメモを追加…",
       "saveNotes": "メモを保存",

@@ -6,10 +6,7 @@ import {
   deleteApplication,
   updateApplication,
 } from '@/lib/api/tracker';
-import {
-  createInterviewQuestion,
-  listInterviewQuestions,
-} from '@/lib/api/tracker';
+import { createInterviewQuestion, listInterviewQuestions } from '@/lib/api/tracker';
 import { llmProviderToKeyProvider } from '@/lib/api/config';
 
 /**
@@ -70,6 +67,17 @@ describe('tracker API client', () => {
     expect(JSON.parse(String(options.body))).toEqual({ status: 'rejected', position: 0 });
   });
 
+  it('sends a nullable interview_at on update', async () => {
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ application_id: 'x', interview_at: null }), { status: 200 })
+    );
+    await updateApplication('x', { interview_at: null });
+    const { url, options } = lastCall();
+    expect(url).toContain('/applications/x');
+    expect(options.method).toBe('PATCH');
+    expect(JSON.parse(String(options.body))).toEqual({ interview_at: null });
+  });
+
   it('createApplication POSTs the manual-add payload', async () => {
     fetchMock.mockResolvedValue(
       new Response(JSON.stringify({ application_id: 'x' }), { status: 200 })
@@ -109,10 +117,7 @@ describe('tracker API client', () => {
 
   it('createInterviewQuestion POSTs the question to its application', async () => {
     fetchMock.mockResolvedValue(
-      new Response(
-        JSON.stringify({ question_id: 'q1', application_id: 'app-1' }),
-        { status: 200 }
-      )
+      new Response(JSON.stringify({ question_id: 'q1', application_id: 'app-1' }), { status: 200 })
     );
     await createInterviewQuestion('app-1', 'Explain a difficult tradeoff.');
     const { url, options } = lastCall();

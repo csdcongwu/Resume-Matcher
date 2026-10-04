@@ -28,10 +28,7 @@ interface InterviewQuestionsDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function InterviewQuestionsDialog({
-  open,
-  onOpenChange,
-}: InterviewQuestionsDialogProps) {
+export function InterviewQuestionsDialog({ open, onOpenChange }: InterviewQuestionsDialogProps) {
   const { t } = useTranslations();
   const [applications, setApplications] = useState<Application[]>([]);
   const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
@@ -120,9 +117,7 @@ export function InterviewQuestionsDialog({
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor="interview-question">
-                {t('tracker.interviewQuestions.question')}
-              </Label>
+              <Label htmlFor="interview-question">{t('tracker.interviewQuestions.question')}</Label>
               <Textarea
                 id="interview-question"
                 value={questionText}

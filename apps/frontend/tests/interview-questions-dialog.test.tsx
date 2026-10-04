@@ -37,6 +37,7 @@ const application: Application = {
   company: 'Acme Corp',
   role: 'Backend Engineer',
   applied_at: null,
+  interview_at: null,
   notes: null,
   position: 0,
   created_at: '2026-01-01T00:00:00Z',
@@ -102,9 +103,7 @@ describe('InterviewQuestionsDialog', () => {
     fireEvent.change(input, {
       target: { value: 'Tell me about a difficult migration.' },
     });
-    fireEvent.click(
-      screen.getByRole('button', { name: 'tracker.interviewQuestions.add' })
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'tracker.interviewQuestions.add' }));
 
     await waitFor(() => {
       expect(createInterviewQuestion).toHaveBeenCalledWith(
@@ -112,9 +111,7 @@ describe('InterviewQuestionsDialog', () => {
         'Tell me about a difficult migration.'
       );
     });
-    expect(
-      await screen.findByText('Tell me about a difficult migration.')
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Tell me about a difficult migration.')).toBeInTheDocument();
     expect(input).toHaveValue('');
   });
 
@@ -123,8 +120,6 @@ describe('InterviewQuestionsDialog', () => {
 
     render(<InterviewQuestionsDialog open onOpenChange={vi.fn()} />);
 
-    expect(
-      await screen.findByText('tracker.interviewQuestions.loadFailed')
-    ).toBeInTheDocument();
+    expect(await screen.findByText('tracker.interviewQuestions.loadFailed')).toBeInTheDocument();
   });
 });

@@ -169,6 +169,7 @@ describe('KanbanBoard column visibility', () => {
     company: 'ACME',
     role: 'Engineer',
     applied_at: null,
+    interview_at: null,
     notes: null,
     position: 0,
     created_at: '2026-01-01T00:00:00Z',
@@ -243,9 +244,7 @@ describe('KanbanBoard column visibility', () => {
     await renderBoard();
     const before = visibleColumns();
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'tracker.interviewQuestions.button' })
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'tracker.interviewQuestions.button' }));
 
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
     expect(visibleColumns()).toEqual(before);
